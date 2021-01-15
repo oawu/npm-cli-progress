@@ -26,7 +26,7 @@ const Progress = {
       loading: { _value: '⠦⠧⠇⠏⠉⠙⠹⠸⠼⠴⠤⠦', _index: 0, _length: 12, get value () { return this._value[this._index++ % this._length] }, set value (val) { return this._index = 0, this._length = val.length, this._value = val }, color: text => Xterm.yellow(text) },
       done: { value: '完成', color: text => Xterm.green(text) },
       fail: { value: '錯誤', color: text => Xterm.red(text) },
-      index: { value: '', color: text => Xterm.gray(text).dim() }
+      index: { value: '', color: text => Xterm.dim(text) }
     },
   },
 
@@ -37,7 +37,7 @@ const Progress = {
       else return ''
     },
     appendTo(lines) {
-      if (lines.length) return [...lines].map(({ index, space, str }) => ['\x1b[K', ' '.repeat(Progress.option.space), index ? space + '  ' + Progress.option.newline : Progress.option.header, ' ', index ? (Progress.option.subtitle = str, Progress.option.subtitle) : (Progress.option.title = str, Progress.option.title)].join('')).join("\n")
+      if (lines.length) return [...lines].map(({ index, space, str }) => ['\x1b[K', ' '.repeat(Progress.option.space), index ? space + '  ' + Progress.option.newline : Progress.option.header, ' ', index ? (Progress.option.subtitle = str, Progress.option.subtitle) : (Progress.option.title = str, Progress.option.title), index ? '' : this].join('')).join("\n")
       else return ' '.repeat(Progress.option.space) + this
     }
   },
