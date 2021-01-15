@@ -1,0 +1,32 @@
+{
+  "name": "@oawu/cli-progress",
+  "version": "1.0.2",
+  "description": "OA 的終端機進度工具 🚀",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comdan66/node-Cli-Progress.git"
+  },
+  "keywords": [
+    "cli-progress",
+    "command line",
+    "progress",
+    "terminal"
+  ],
+  "author": {
+    "name": "OA Wu",
+    "email": "comdan66@gmail.com",
+    "url": "https://www.ioa.tw"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/comdan66/node-Cli-Progress/issues"
+  },
+  "homepage": "https://github.com/comdan66/node-Cli-Progress#readme",
+  "dependencies": {
+    "@oawu/xterm": "^1.0.2"
+  }
+}
