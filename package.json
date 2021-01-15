@@ -1,6 +1,6 @@
 {
   "name": "@oawu/cli-progress",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "OA 的終端機進度工具 🚀",
   "main": "index.js",
   "scripts": {
