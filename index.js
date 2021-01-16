@@ -34,7 +34,7 @@ const Progress = {
     index: 0, total: 0, text: '',
     toString (percent) {
       if (this.total) return percent = Math.ceil(this.index * 100) / this.total, Progress.option.index = '(' + this.index + '/' + this.total + ')', [Progress.option.index, (Progress.option.percent = parseInt(percent <= 100 ? percent >= 0 ? percent : 0 : 100, 10) + '%', Progress.option.percent), this.text].filter(t => t !== '').join(' ' + Progress.option.dash + ' ')
-      return ' ' + Progress.option.dash + ' ' + this.text.toString()
+      return this.text !== '' ? ' ' + Progress.option.dash + ' ' + this.text.toString() : ''
     },
     appendTo(lines) {
       if (lines.length) return [...lines].map(({ index, space, str }) => ['\x1b[K', ' '.repeat(Progress.option.space), index ? space + '  ' + Progress.option.newline : Progress.option.header, ' ', index ? (Progress.option.subtitle = str, Progress.option.subtitle) : (Progress.option.title = str, Progress.option.title), index ? '' : this].join('')).join("\n")
