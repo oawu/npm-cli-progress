@@ -53,7 +53,7 @@ const Progress = {
     else return Progress.option.$.loading._index = 0, Progress.lines = strs.map((line, index) => { const match = /(?<space>^\s*)(?<str>.*)/gm.exec(line); return match !== null ? { ...match.groups, index } : match }).filter(line => line !== null), Progress.timer = setInterval(_ => Progress.finish ? Progress.stop() : Progress.print(Progress.clean + Progress.percent.appendTo(Progress.lines) + Progress.option.dot + ' ' + Progress.option.loading + ' '), 85), Progress
   },
   total (total) {
-    return Progress.percent.total = total, Progress.percent.index = 0
+    return Progress.percent.total = total, Progress.percent.index = 0, Progress
   },
   stop () {
     if (Progress.timer === null) return Progress
