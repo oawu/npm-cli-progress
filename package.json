@@ -1,7 +1,7 @@
 {
   "name": "@oawu/cli-progress",
   "version": "1.0.7",
-  "description": "OA 的終端機進度工具 🚀",
+  "description": "🚀 轉轉轉，現在跑到哪裡惹？",
   "main": "index.js",
   "scripts": {
     "test": "node test.js"
