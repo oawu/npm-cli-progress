@@ -31,9 +31,9 @@ const Progress = {
   },
 
   percent: {
-    index: 0, total: 0, text: '',
+    index: null, total: null, text: '',
     toString (percent) {
-      if (this.total) return percent = Math.ceil(this.index * 100) / this.total, Progress.option.index = '(' + this.index + '/' + this.total + ')', [Progress.option.index, (Progress.option.percent = parseInt(percent <= 100 ? percent >= 0 ? percent : 0 : 100, 10) + '%', Progress.option.percent), this.text].filter(t => t !== '').join(' ' + Progress.option.dash + ' ')
+      if (this.index !== null && this.total !== null) return percent = Math.ceil(this.index * 100) / this.total, Progress.option.index = '(' + this.index + '/' + this.total + ')', [Progress.option.index, (Progress.option.percent = parseInt(percent <= 100 ? percent >= 0 ? percent : 0 : 100, 10) + '%', Progress.option.percent), this.text].filter(t => t !== '').join(' ' + Progress.option.dash + ' ')
       return this.text !== '' ? ' ' + Progress.option.dash + ' ' + this.text.toString() : ''
     },
     appendTo(lines) {
@@ -53,11 +53,11 @@ const Progress = {
     else return Progress.option.$.loading._index = 0, Progress.lines = strs.map((line, index) => { const match = /(?<space>^\s*)(?<str>.*)/gm.exec(line); return match !== null ? { ...match.groups, index } : match }).filter(line => line !== null), Progress.timer = setInterval(_ => Progress.finish ? Progress.stop() : Progress.print(Progress.clean + Progress.percent.appendTo(Progress.lines) + Progress.option.dot + ' ' + Progress.option.loading + ' '), 85), Progress
   },
   total (total) {
-    return Progress.percent.total = total, Progress.percent.index = 0
+    return Progress.percent.total = total, Progress.percent.index = 0, Progress
   },
   stop () {
     if (Progress.timer === null) return Progress
-    else return Progress.print(Progress.clean + Progress.percent.appendTo(Progress.lines) + "\n"), clearInterval(Progress.timer), Progress.lines = [], Progress.percent.index = 0, Progress.percent.total = 0, Progress.percent.text = '', Progress.option.$.loading._index = 0, Progress.finish(), Progress.finish = null, Progress.timer = null, Progress
+    else return Progress.print(Progress.clean + Progress.percent.appendTo(Progress.lines) + "\n"), clearInterval(Progress.timer), Progress.lines = [], Progress.percent.index = null, Progress.percent.total = null, Progress.percent.text = '', Progress.option.$.loading._index = 0, Progress.finish(), Progress.finish = null, Progress.timer = null, Progress
   },
   done (message = '完成') {
     return Progress.percent.index = Progress.percent.total, Progress.option.done = message, Progress.percent.text = Progress.option.done, Progress.stop(Progress.finish = _ => {}), Progress
