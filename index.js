@@ -66,7 +66,7 @@ const Progress = {
     return Progress.option.fail = message === null || message === undefined ? '錯誤' : message, Progress.percent.text = Progress.option.fail, Progress.stop(Progress.finish = _ => Progress.error(...errors)), Progress
   },
   error (...errors) {
-    return errors.length && Progress.print(Progress.option.color ? "\n 【錯誤訊息】\n".red : "\n 【錯誤訊息】\n" + errors.map(error => ' '.repeat(Progress.option.space) + Progress.option.header + ' ' + (error instanceof Error ? error.stack : error) + "\n").join('') + "\n") && process.emit('SIGINT'), Progress
+    return errors.length && Progress.print((Progress.option.color ? "\n 【錯誤訊息】\n".red : "\n 【錯誤訊息】\n") + errors.map(error => ' '.repeat(Progress.option.space) + Progress.option.header + ' ' + (error instanceof Error ? error.stack : error) + "\n").join('') + "\n") && process.emit('SIGINT'), Progress
   },
 }
 
