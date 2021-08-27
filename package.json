@@ -27,6 +27,6 @@
   },
   "homepage": "https://github.com/comdan66/node-Cli-Progress#readme",
   "dependencies": {
-    "@oawu/xterm": "^1.0.5"
+    "@oawu/xterm": "^1.0.6"
   }
 }
