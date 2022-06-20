@@ -1,6 +1,6 @@
 {
   "name": "@oawu/cli-progress",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "🚀 轉轉轉，現在跑到哪裡惹？",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/comdan66/node-Cli-Progress.git"
+    "url": "git+https://github.com/oawu/npm-cli-progress.git"
   },
   "keywords": [
     "cli-progress",
@@ -18,15 +18,15 @@
   ],
   "author": {
     "name": "OA Wu",
-    "email": "comdan66@gmail.com",
+    "email": "oawu.tw@gmail.com",
     "url": "https://www.ioa.tw"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/comdan66/node-Cli-Progress/issues"
+    "url": "https://github.com/oawu/npm-cli-progress/issues"
   },
-  "homepage": "https://github.com/comdan66/node-Cli-Progress#readme",
+  "homepage": "https://github.com/oawu/npm-cli-progress#readme",
   "dependencies": {
-    "@oawu/xterm": "^1.0.6"
+    "@oawu/xterm": "^1.0.7"
   }
 }
