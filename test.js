@@ -180,6 +180,14 @@ const test6 = _ => {
 const test7 = _ => {
   process.stdout.write("\n")
 
+  Progress.title('標題')
+  Progress.appendTitle('副標題 1')
+  Progress.done()
+  test8()
+}
+const test8 = _ => {
+  process.stdout.write("\n")
+
   Progress.title()
   Progress.total(2)
 

@@ -99,26 +99,26 @@ const Progress = {
     Progress.lines = []
     Progress.appendTitle(...strs)
 
-    const timer = _ => {
-      if (Progress.finish)
-        return Progress.stop()
-
-      if (Progress.lines.length > 1)
-        Progress.print(Progress.clean)
-
-      if (Progress.preLines.length) {
-        Progress.lines = Progress.lines
-          .concat(Progress.preLines)
-          .map(({ space, str }, index) => ({ space, str, index }))
-        Progress.preLines = []
-      }
-
-      Progress.print(`${Progress.percent.appendTo(Progress.lines)}${Progress.option.dot} ${Progress.option.loading} `)
-    }
-
-    Progress.timer = setInterval(timer, 85, timer())
+    Progress.timer = setInterval(Progress._timer.bind(Progress, false), 85, Progress._timer(false))
 
     return Progress
+  },
+  _timer (fromStop) {
+    if (!fromStop && Progress.finish)
+      return Progress.stop()
+
+    if (Progress.lines.length > 1)
+      Progress.print(Progress.clean)
+
+    if (Progress.preLines.length) {
+      Progress.lines = Progress.lines
+        .concat(Progress.preLines)
+        .map(({ space, str }, index) => ({ space, str, index }))
+      Progress.preLines = []
+    }
+    fromStop
+      ? Progress.print(`${Progress.percent.appendTo(Progress.lines)}\n`)
+      : Progress.print(`${Progress.percent.appendTo(Progress.lines)}${Progress.option.dot} ${Progress.option.loading} `)
   },
   appendTitle(...strs) {
     Progress.preLines = Progress.preLines.concat(strs.map(line => {
@@ -137,11 +137,11 @@ const Progress = {
   stop () {
     if (Progress.timer === null)
       return Progress
-    
-    Progress.print(`${Progress.clean}${Progress.percent.appendTo(Progress.lines)}\n`)
+    else
+      clearInterval(Progress.timer)
 
-    clearInterval(Progress.timer)
-    
+    Progress._timer(true)
+
     Progress.lines = []
     Progress.preLines = []
     
