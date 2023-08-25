@@ -99,7 +99,7 @@ const Progress = {
     Progress.lines = []
     Progress.appendTitle(...strs)
 
-    Progress.timer = setInterval(_ => {
+    const timer = _ => {
       if (Progress.finish)
         return Progress.stop()
 
@@ -114,7 +114,9 @@ const Progress = {
       }
 
       Progress.print(`${Progress.percent.appendTo(Progress.lines)}${Progress.option.dot} ${Progress.option.loading} `)
-    }, 85)
+    }
+
+    Progress.timer = setInterval(timer, 85, timer())
 
     return Progress
   },
