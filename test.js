@@ -115,6 +115,38 @@ const test4 = _ => {
 const test5 = _ => {
   process.stdout.write("\n")
 
+  Progress.title('標題')
+  Progress.total(10)
+
+  setTimeout(_ => {
+    Progress.appendTitle('副標題 1')
+    setTimeout(_ => {
+      Progress.appendTitle('副標題 2')
+      setTimeout(_ => {
+        Progress.appendTitle('副標題 3')
+        setTimeout(_ => {
+          Progress.advance
+          
+          setTimeout(_ => {
+            Progress.advance
+
+            setTimeout(_ => {
+              Progress.advance
+
+              setTimeout(_ => {
+                Progress.advance.fail()
+                test6()
+              }, 100)
+            }, 100)
+          }, 100)
+        }, 100)
+      }, 100)
+    }, 100)
+  }, 100)
+}
+const test6 = _ => {
+  process.stdout.write("\n")
+
   Progress.title()
   Progress.total(2)
 

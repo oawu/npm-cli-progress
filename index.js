@@ -36,30 +36,39 @@ const Progress = {
     toString (percent) {
       if (this.index !== null && this.total !== null) {
         percent = Math.ceil(this.index * 100) / this.total
-        Progress.option.index = '(' + this.index + '/' + this.total + ')'
-        return [Progress.option.index, (Progress.option.percent = parseInt(percent <= 100 ? percent >= 0 ? percent : 0 : 100, 10) + '%', Progress.option.percent), this.text].filter(t => t !== '').join(' ' + Progress.option.dash + ' ')
+        Progress.option.index = `(${this.index}/${this.total})`
+        return [
+          Progress.option.index,
+          (Progress.option.percent = `${parseInt(percent <= 100
+            ? percent >= 0
+              ? percent
+              : 0
+            : 100, 10)}%`),
+          this.text].filter(t => t !== '').join(` ${Progress.option.dash} `)
       }
       return this.text !== ''
-        ? ' ' + Progress.option.dash + ' ' + this.text.toString()
+        ? ` ${Progress.option.dash} ${this.text}`
         : ''
     },
     appendTo(lines) {
+      const s = ' '.repeat(Progress.option.space)
+      
       if (!lines.length)
-        return ' '.repeat(Progress.option.space) + this
+        return `${s}${this}`
 
-      return [...lines].map(({ index, space, str }) => [
-        '\x1b[K',
-        ' '.repeat(Progress.option.space),
-        index
-          ? space + '  ' + Progress.option.newline
-          : Progress.option.header,
-        ' ',
-        index
+      const header = (index, space) => index
+          ? `${space}  ${Progress.option.newline}`
+          : Progress.option.header
+
+      const title = (index, str) => index
           ? (Progress.option.subtitle = str, Progress.option.subtitle)
-          : (Progress.option.title = str, Progress.option.title),
-        index
+          : (Progress.option.title = str, Progress.option.title)
+
+      const percent = index => index
           ? ''
-          : this].join('')).join("\n")
+          : this
+
+      return [...lines].map(({ index, space, str }) => `\x1b[K${s}${header(index, space)} ${title(index, str)}${percent(index)}`).join("\n")
     }
   },
 
@@ -76,12 +85,12 @@ const Progress = {
   get clean () {
     return Progress.option.$.loading._index
       ? Progress.lines.length > 1
-        ? '\x1b[' + (Progress.lines.length - 1) + 'A'
+        ? `\x1b[${Progress.lines.length - 1}A`
         : "\r"
       : ''
   },
 
-  print: (...strs) => process.stdout.write("\r" + strs.join('')),
+  print: (...strs) => process.stdout.write(`\r${strs.join('')}`),
   
   title (...strs) {
     if (Progress.timer) return Progress
@@ -94,7 +103,8 @@ const Progress = {
       if (Progress.finish)
         return Progress.stop()
 
-      Progress.print(Progress.clean)
+      if (Progress.lines.length > 1)
+        Progress.print(Progress.clean)
 
       if (Progress.preLines.length) {
         Progress.lines = Progress.lines
@@ -103,12 +113,7 @@ const Progress = {
         Progress.preLines = []
       }
 
-      Progress.print(
-        ''
-          + Progress.percent.appendTo(Progress.lines)
-          + Progress.option.dot
-          + ' '
-          + Progress.option.loading + ' ')
+      Progress.print(`${Progress.percent.appendTo(Progress.lines)}${Progress.option.dot} ${Progress.option.loading} `)
     }, 85)
 
     return Progress
@@ -131,9 +136,7 @@ const Progress = {
     if (Progress.timer === null)
       return Progress
     
-    Progress.print(
-      Progress.clean
-        + Progress.percent.appendTo(Progress.lines) + "\n")
+    Progress.print(`${Progress.clean}${Progress.percent.appendTo(Progress.lines)}\n`)
 
     clearInterval(Progress.timer)
     
@@ -169,20 +172,12 @@ const Progress = {
   },
   error (...errors) {
     errors.length && Progress.print(
-      (Progress.option.color
+      `${Progress.option.color
         ? "\n 【錯誤訊息】\n".red
-        : "\n 【錯誤訊息】\n")
-
-        + errors.map(
-          error => ' '.repeat(Progress.option.space)
-            + Progress.option.header
-            + ' '
-            + (error instanceof Error
-                ? error.stack
-                : error) + "\n").join('')
-
-        + "\n")
-
+        : "\n 【錯誤訊息】\n"}${errors.map(
+          error => `${' '.repeat(Progress.option.space)}${Progress.option.header} ${error instanceof Error
+            ? error.stack
+            : error}\n`).join('')}\n`)
     process.emit('SIGINT')
     return Progress
   },
