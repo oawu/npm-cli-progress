@@ -121,11 +121,11 @@ const Progress = {
     return Progress
   },
   appendTitle(...strs) {
-    Progress.preLines = strs.map(line => {
+    Progress.preLines = Progress.preLines.concat(strs.map(line => {
       const match = /(?<space>^\s*)(?<str>.*)/gm.exec(line)
       return match !== null ? { ...match.groups } : null
     })
-    .filter(line => line !== null)
+    .filter(line => line !== null))
 
     return Progress
   },
