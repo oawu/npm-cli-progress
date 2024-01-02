@@ -173,13 +173,17 @@ const Progress = {
     return Progress
   },
   error (...errors) {
-    errors.length && Progress.print(
+    if (errors.length <= 0)
+      return Progress
+
+    Progress.print(
       `${Progress.option.color
         ? "\n 【錯誤訊息】\n".red
         : "\n 【錯誤訊息】\n"}${errors.map(
           error => `${' '.repeat(Progress.option.space)}${Progress.option.header} ${error instanceof Error
             ? error.stack
             : error}\n`).join('')}\n`)
+
     process.emit('SIGINT')
     return Progress
   },
