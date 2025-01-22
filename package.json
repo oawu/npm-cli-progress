@@ -1,6 +1,6 @@
 {
   "name": "@oawu/cli-progress",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "🚀 轉轉轉，現在跑到哪裡惹？",
   "main": "index.js",
   "scripts": {

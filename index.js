@@ -1,11 +1,13 @@
 /**
  * @author      OA Wu <comdan66@gmail.com>
- * @copyright   Copyright (c) 2015 - 2021, @oawu/cli-progress
+ * @copyright   Copyright (c) 2015 - 2025, @oawu/cli-progress
  * @license     http://opensource.org/licenses/MIT  MIT License
  * @link        https://www.ioa.tw/
  */
 
 const Xterm = require('@oawu/xterm')
+
+const Print = (...strs) => process.stdout.write(`\r${strs.join('')}`)
 
 const Progress = {
   lines: [],
@@ -17,34 +19,80 @@ const Progress = {
   option: {
     space: 3, color: false,
     $: {
-      title: { value: '', color: text => text },
-      subtitle: { value: '', color: text => text },
-      percent: { value: '', color: text => text },
-      header: { value: '◉', color: text => Xterm.purple(text) },
-      newline: { value: '↳', color: text => Xterm.purple(text).dim() },
-      dash: { value: '─', color: text => Xterm.dim(text) },
-      dot: { value: '…', color: text => Xterm.lightBlack(text).dim() },
-      loading: { _value: '⠦⠧⠇⠏⠉⠙⠹⠸⠼⠴⠤⠦', _index: 0, _length: 12, get value () { return this._value[this._index++ % this._length] }, set value (val) { return this._index = 0, this._length = val.length, this._value = val }, color: text => Xterm.yellow(text) },
-      done: { value: '完成', color: text => Xterm.green(text) },
-      fail: { value: '錯誤', color: text => Xterm.red(text) },
-      index: { value: '', color: text => Xterm.dim(text) }
+      title: {
+        value: '',
+        color: text => text
+      },
+      subtitle: {
+        value: '',
+        color: text => text
+      },
+      percent: {
+        value: '',
+        color: text => text
+      },
+      header: {
+        value: '◉',
+        color: text => Xterm.purple(text)
+      },
+      newline: {
+        value: '↳',
+        color: text => Xterm.purple(text).dim()
+      },
+      dash: {
+        value: '─',
+        color: text => Xterm.dim(text)
+      },
+      dot: {
+        value: '…',
+        color: text => Xterm.lightBlack(text).dim()
+      },
+      loading: {
+        _value: '⠦⠧⠇⠏⠉⠙⠹⠸⠼⠴⠤⠦',
+        _index: 0,
+        _length: 12,
+        get value () {
+          return this._value[this._index++ % this._length]
+        },
+        set value (val) {
+          this._index = 0
+          this._length = val.length
+          this._value = val
+        },
+        color: text => Xterm.yellow(text)
+      },
+      done: {
+        value: '完成',
+        color: text => Xterm.green(text)
+      },
+      fail: {
+        value: '錯誤',
+        color: text => Xterm.red(text)
+      },
+      index: {
+        value: '',
+        color: text => Xterm.dim(text)
+      }
     },
   },
 
   percent: {
-    index: null, total: null, text: '',
+    index: null,
+    total: null,
+    text: '',
     toString (percent) {
       if (this.index !== null && this.total !== null) {
         percent = Math.ceil(this.index * 100) / this.total
+
         Progress.option.index = `(${this.index}/${this.total})`
+        percent = parseInt(percent <= 100 ? percent >= 0 ? percent : 0 : 100, 10)
+        Progress.option.percent = `${percent}%`
+        
         return [
           Progress.option.index,
-          (Progress.option.percent = `${parseInt(percent <= 100
-            ? percent >= 0
-              ? percent
-              : 0
-            : 100, 10)}%`),
-          this.text].filter(t => t !== '').join(` ${Progress.option.dash} `)
+          Progress.option.percent,
+          this.text
+        ].filter(t => t !== '').join(` ${Progress.option.dash} `)
       }
       return this.text !== ''
         ? ` ${Progress.option.dash} ${this.text}`
@@ -53,8 +101,9 @@ const Progress = {
     appendTo(lines) {
       const s = ' '.repeat(Progress.option.space)
       
-      if (!lines.length)
+      if (!lines.length) {
         return `${s}${this}`
+      }
 
       const header = (index, space) => index
           ? `${space}  ${Progress.option.newline}`
@@ -74,8 +123,9 @@ const Progress = {
 
   set advance (val) {
     Progress.percent.index += val
-    if (Progress.percent.index > Progress.percent.total)
+    if (Progress.percent.index > Progress.percent.total) {
       Progress.percent.index = Progress.percent.total
+    }
     return Progress
   },
   get advance () {
@@ -90,10 +140,10 @@ const Progress = {
       : ''
   },
 
-  print: (...strs) => process.stdout.write(`\r${strs.join('')}`),
-  
   title (...strs) {
-    if (Progress.timer) return Progress
+    if (Progress.timer) {
+      return Progress
+    }
 
     Progress.option.$.loading._index = 0
     Progress.lines = []
@@ -104,21 +154,22 @@ const Progress = {
     return Progress
   },
   _timer (fromStop) {
-    if (!fromStop && Progress.finish)
+    if (!fromStop && Progress.finish) {
       return Progress.stop()
+    }
 
-    if (Progress.lines.length > 1)
-      Progress.print(Progress.clean)
+    if (Progress.lines.length > 1) {
+      Print(Progress.clean)
+    }
 
     if (Progress.preLines.length) {
-      Progress.lines = Progress.lines
-        .concat(Progress.preLines)
-        .map(({ space, str }, index) => ({ space, str, index }))
+      Progress.lines = Progress.lines.concat(Progress.preLines).map(({ space, str }, index) => ({ space, str, index }))
       Progress.preLines = []
     }
+
     fromStop
-      ? Progress.print(`${Progress.percent.appendTo(Progress.lines)}\n`)
-      : Progress.print(`${Progress.percent.appendTo(Progress.lines)}${Progress.option.dot} ${Progress.option.loading} `)
+      ? Print(`${Progress.percent.appendTo(Progress.lines)}\n`)
+      : Print(`${Progress.percent.appendTo(Progress.lines)}${Progress.option.dot} ${Progress.option.loading} `)
   },
   appendTitle(...strs) {
     Progress.preLines = Progress.preLines.concat(strs.map(line => {
@@ -135,10 +186,11 @@ const Progress = {
     return Progress
   },
   stop () {
-    if (Progress.timer === null)
+    if (Progress.timer === null) {
       return Progress
-    else
-      clearInterval(Progress.timer)
+    }
+    
+    clearInterval(Progress.timer)
 
     Progress._timer(true)
 
@@ -173,10 +225,11 @@ const Progress = {
     return Progress
   },
   error (...errors) {
-    if (errors.length <= 0)
+    if (errors.length <= 0) {
       return Progress
+    }
 
-    Progress.print(
+    Print(
       `${Progress.option.color
         ? "\n 【錯誤訊息】\n".red
         : "\n 【錯誤訊息】\n"}${errors.map(
@@ -196,5 +249,69 @@ Object.keys(Progress.option.$).forEach(key => Object.defineProperty(Progress.opt
       return f.toString = _ => Progress.option.color ? Progress.option.$[key].color(Progress.option.$[key].value).toString() : Progress.option.$[key].value, Object.defineProperty(f, 'color', { set: func => Progress.option.$[key].color = func }), f
     }
   }))
+
+Progress.Multi = function(text, percent = 0) {
+  if (!(this instanceof Progress.Multi)) {
+    return new Progress.Multi(text, percent)
+  }
+
+  this._text = text
+  this._percent = percent
+}
+
+Object.defineProperty(Progress.Multi.prototype, 'text', {
+  set (val) {
+    this.refresh(this._text = val)
+  }
+})
+Object.defineProperty(Progress.Multi.prototype, 'percent', {
+  set (val) {
+    this.refresh(this._percent = val)
+  }
+})
+Progress.Multi.prototype.toString = function() {
+  return `${this._percent < 100
+    ? this._percent < 10
+      ? `  ${this._percent}`
+      : ` ${this._percent}`
+    : `${this._percent}`}% | ${this._text}`
+}
+Progress.Multi.prototype.refresh = function() {
+  if (this._index === null || this._index >= process.stdout.rows || Progress.Multi.lock) {
+    return this
+  }
+  process.stdout.write(`\x1b[${this._index}A\r\x1b[K`)
+  process.stdout.write(`${this}`)
+  Progress.Multi.back()
+  return this
+}
+
+Progress.Multi.save = _ => process.stdout.write('\x1b[s')
+Progress.Multi.back = _ => process.stdout.write(`\x1b[u`)
+
+Progress.Multi.lock = false
+Progress.Multi.push = task => Progress.Multi.container.push(task)
+Progress.Multi.container = {
+  $: [],
+  clean () {
+    this.$ = []
+    Progress.Multi.back()
+    return this
+  },
+  push (task) {
+    Progress.Multi.lock = true
+    this.$.push(task)
+
+    const len = this.$.length
+    for (let i = 0; i < len; i++) {
+      this.$[i]._index = len - i
+    }
+    
+    process.stdout.write(`${task}\n`)
+    Progress.Multi.save()
+    Progress.Multi.lock = false
+    return task
+  }
+}
 
 module.exports = Progress
