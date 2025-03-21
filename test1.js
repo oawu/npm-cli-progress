@@ -17,16 +17,16 @@ const test1 = _ => {
   Progress.total(10)
 
   setTimeout(_ => {
-    Progress.advance
-    
+    Progress.advance()
+
     setTimeout(_ => {
-      Progress.advance
+      Progress.advance()
 
       setTimeout(_ => {
-        Progress.advance
+        Progress.advance()
 
         setTimeout(_ => {
-          Progress.advance.done()
+          Progress.advance().done()
 
           test2()
         }, 100)
@@ -41,16 +41,16 @@ const test2 = _ => {
   Progress.total(10)
 
   setTimeout(_ => {
-    Progress.advance
-    
+    Progress.advance()
+
     setTimeout(_ => {
-      Progress.advance
+      Progress.advance()
 
       setTimeout(_ => {
-        Progress.advance
+        Progress.advance()
 
         setTimeout(_ => {
-          Progress.advance.fail()
+          Progress.advance().fail()
           test3()
         }, 100)
       }, 100)
@@ -64,16 +64,16 @@ const test3 = _ => {
   Progress.total(2)
 
   setTimeout(_ => {
-    Progress.advance
-    
+    Progress.advance()
+
     setTimeout(_ => {
-      Progress.advance
+      Progress.advance()
 
       setTimeout(_ => {
-        Progress.advance
+        Progress.advance()
 
         setTimeout(_ => {
-          Progress.advance.done('ok')
+          Progress.advance().done('ok')
           test4()
         }, 100)
       }, 100)
@@ -93,16 +93,16 @@ const test4 = _ => {
       setTimeout(_ => {
         Progress.appendTitle('副標題 5')
         setTimeout(_ => {
-          Progress.advance
-          
+          Progress.advance()
+
           setTimeout(_ => {
-            Progress.advance
+            Progress.advance()
 
             setTimeout(_ => {
-              Progress.advance
+              Progress.advance()
 
               setTimeout(_ => {
-                Progress.advance.fail()
+                Progress.advance().fail()
                 test5()
               }, 100)
             }, 100)
@@ -125,16 +125,16 @@ const test5 = _ => {
       setTimeout(_ => {
         Progress.appendTitle('副標題 3')
         setTimeout(_ => {
-          Progress.advance
-          
+          Progress.advance()
+
           setTimeout(_ => {
-            Progress.advance
+            Progress.advance()
 
             setTimeout(_ => {
-              Progress.advance
+              Progress.advance()
 
               setTimeout(_ => {
-                Progress.advance.fail()
+                Progress.advance().fail()
                 test6()
               }, 100)
             }, 100)
@@ -158,16 +158,16 @@ const test6 = _ => {
       setTimeout(_ => {
         Progress.appendTitle('副標題 4')
         setTimeout(_ => {
-          Progress.advance
-          
+          Progress.advance()
+
           setTimeout(_ => {
-            Progress.advance
+            Progress.advance()
 
             setTimeout(_ => {
-              Progress.advance
+              Progress.advance()
 
               setTimeout(_ => {
-                Progress.advance.fail()
+                Progress.advance().fail()
                 test7()
               }, 100)
             }, 100)
@@ -192,17 +192,17 @@ const test8 = _ => {
   Progress.total(2)
 
   setTimeout(_ => {
-    Progress.advance
-    
+    Progress.advance()
+
     setTimeout(_ => {
-      Progress.advance
+      Progress.advance()
 
       setTimeout(_ => {
-        Progress.advance
+        Progress.advance()
 
         setTimeout(_ => {
           index++
-          Progress.advance.fail('GG' + index)
+          Progress.advance().fail('GG' + index)
           if (index == 1) test1(Progress.option.color = true)
           else if (index == 2) test1(Progress.option.header = '.')
           else if (index == 3) test1(Progress.option.header.color = Xterm.cyan)

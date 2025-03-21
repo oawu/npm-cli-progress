@@ -51,10 +51,10 @@ const Progress = {
         _value: '⠦⠧⠇⠏⠉⠙⠹⠸⠼⠴⠤⠦',
         _index: 0,
         _length: 12,
-        get value () {
+        get value() {
           return this._value[this._index++ % this._length]
         },
-        set value (val) {
+        set value(val) {
           this._index = 0
           this._length = val.length
           this._value = val
@@ -80,14 +80,14 @@ const Progress = {
     index: null,
     total: null,
     text: '',
-    toString (percent) {
+    toString(percent) {
       if (this.index !== null && this.total !== null) {
         percent = Math.ceil(this.index * 100) / this.total
 
         Progress.option.index = `(${this.index}/${this.total})`
         percent = parseInt(percent <= 100 ? percent >= 0 ? percent : 0 : 100, 10)
         Progress.option.percent = `${percent}%`
-        
+
         return [
           Progress.option.index,
           Progress.option.percent,
@@ -100,47 +100,46 @@ const Progress = {
     },
     appendTo(lines) {
       const s = ' '.repeat(Progress.option.space)
-      
+
       if (!lines.length) {
         return `${s}${this}`
       }
 
       const header = (index, space) => index
-          ? `${space}  ${Progress.option.newline}`
-          : Progress.option.header
+        ? `${space}  ${Progress.option.newline}`
+        : Progress.option.header
 
       const title = (index, str) => index
-          ? (Progress.option.subtitle = str, Progress.option.subtitle)
-          : (Progress.option.title = str, Progress.option.title)
+        ? (Progress.option.subtitle = str, Progress.option.subtitle)
+        : (Progress.option.title = str, Progress.option.title)
 
       const percent = index => index
-          ? ''
-          : this
+        ? ''
+        : this
 
       return [...lines].map(({ index, space, str }) => `\x1b[K${s}${header(index, space)} ${title(index, str)}${percent(index)}`).join("\n")
     }
   },
 
-  set advance (val) {
+  clean() {
+    if (!Progress.option.$.loading._index) {
+      return ''
+    }
+    if (Progress.lines.length > 1) {
+      return `\x1b[${Progress.lines.length - 1}A`
+    }
+    return "\r"
+  },
+
+  advance(val = 1) {
     Progress.percent.index += val
     if (Progress.percent.index > Progress.percent.total) {
       Progress.percent.index = Progress.percent.total
     }
     return Progress
   },
-  get advance () {
-    Progress.advance = 1
-    return Progress
-  },
-  get clean () {
-    return Progress.option.$.loading._index
-      ? Progress.lines.length > 1
-        ? `\x1b[${Progress.lines.length - 1}A`
-        : "\r"
-      : ''
-  },
 
-  title (...strs) {
+  title(...strs) {
     if (Progress.timer) {
       return Progress
     }
@@ -153,13 +152,13 @@ const Progress = {
 
     return Progress
   },
-  _timer (fromStop) {
+  _timer(fromStop) {
     if (!fromStop && Progress.finish) {
       return Progress.stop()
     }
 
     if (Progress.lines.length > 1) {
-      Print(Progress.clean)
+      Print(Progress.clean())
     }
 
     if (Progress.preLines.length) {
@@ -176,47 +175,47 @@ const Progress = {
       const match = /(?<space>^\s*)(?<str>.*)/gm.exec(line)
       return match !== null ? { ...match.groups } : null
     })
-    .filter(line => line !== null))
+      .filter(line => line !== null))
 
     return Progress
   },
-  total (total) {
+  total(total) {
     Progress.percent.total = total
     Progress.percent.index = 0
     return Progress
   },
-  stop () {
+  stop() {
     if (Progress.timer === null) {
       return Progress
     }
-    
+
     clearInterval(Progress.timer)
 
     Progress._timer(true)
 
     Progress.lines = []
     Progress.preLines = []
-    
+
     Progress.percent.index = null
     Progress.percent.total = null
     Progress.percent.text = ''
-    
+
     Progress.option.$.loading._index = 0
-    
+
     Progress.finish()
     Progress.finish = null
     Progress.timer = null
 
     return Progress
   },
-  done (message = '完成') {
+  done(message = '完成') {
     Progress.percent.index = Progress.percent.total
     Progress.option.done = message
     Progress.percent.text = Progress.option.done
-    Progress.stop(Progress.finish = _ => {})
+    Progress.stop(Progress.finish = _ => { })
     return Progress
   },
-  fail (message = '錯誤', ...errors) {
+  fail(message = '錯誤', ...errors) {
     Progress.option.fail = message === null || message === undefined
       ? '錯誤'
       : message
@@ -224,7 +223,7 @@ const Progress = {
     Progress.stop(Progress.finish = _ => Progress.error(...errors))
     return Progress
   },
-  error (...errors) {
+  error(...errors) {
     if (errors.length <= 0) {
       return Progress
     }
@@ -243,14 +242,14 @@ const Progress = {
 }
 
 Object.keys(Progress.option.$).forEach(key => Object.defineProperty(Progress.option, key, {
-    set: val => Progress.option.$[key].value = val,
-    get: _ => {
-      const f = function() {}
-      return f.toString = _ => Progress.option.color ? Progress.option.$[key].color(Progress.option.$[key].value).toString() : Progress.option.$[key].value, Object.defineProperty(f, 'color', { set: func => Progress.option.$[key].color = func }), f
-    }
-  }))
+  set: val => Progress.option.$[key].value = val,
+  get: _ => {
+    const f = function () { }
+    return f.toString = _ => Progress.option.color ? Progress.option.$[key].color(Progress.option.$[key].value).toString() : Progress.option.$[key].value, Object.defineProperty(f, 'color', { set: func => Progress.option.$[key].color = func }), f
+  }
+}))
 
-Progress.Multi = function(text, percent = 0) {
+Progress.Multi = function (text, percent = 0) {
   if (!(this instanceof Progress.Multi)) {
     return new Progress.Multi(text, percent)
   }
@@ -260,23 +259,23 @@ Progress.Multi = function(text, percent = 0) {
 }
 
 Object.defineProperty(Progress.Multi.prototype, 'text', {
-  set (val) {
+  set(val) {
     this.refresh(this._text = val)
   }
 })
 Object.defineProperty(Progress.Multi.prototype, 'percent', {
-  set (val) {
+  set(val) {
     this.refresh(this._percent = val)
   }
 })
-Progress.Multi.prototype.toString = function() {
+Progress.Multi.prototype.toString = function () {
   return `${this._percent < 100
     ? this._percent < 10
       ? `  ${this._percent}`
       : ` ${this._percent}`
     : `${this._percent}`}% | ${this._text}`
 }
-Progress.Multi.prototype.refresh = function() {
+Progress.Multi.prototype.refresh = function () {
   if (this._index === null || this._index >= process.stdout.rows || Progress.Multi.lock) {
     return this
   }
@@ -293,12 +292,12 @@ Progress.Multi.lock = false
 Progress.Multi.push = task => Progress.Multi.container.push(task)
 Progress.Multi.container = {
   $: [],
-  clean () {
+  clean() {
     this.$ = []
     Progress.Multi.back()
     return this
   },
-  push (task) {
+  push(task) {
     Progress.Multi.lock = true
     this.$.push(task)
 
@@ -306,7 +305,7 @@ Progress.Multi.container = {
     for (let i = 0; i < len; i++) {
       this.$[i]._index = len - i
     }
-    
+
     process.stdout.write(`${task}\n`)
     Progress.Multi.save()
     Progress.Multi.lock = false

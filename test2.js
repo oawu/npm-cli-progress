@@ -12,10 +12,10 @@ Progress.title('標題', '副標題')
 Progress.total(3)
 
 setTimeout(_ => {
-  Progress.advance
-  
+  Progress.advance()
+
   setTimeout(_ => {
-    Progress.advance
+    Progress.advance()
 
     setTimeout(_ => {
       Progress.done()
@@ -34,10 +34,10 @@ Progress.title('標題', '副標題')
 Progress.total(3)
 
 setTimeout(_ => {
-  Progress.advance
-  
+  Progress.advance()
+
   setTimeout(_ => {
-    Progress.advance
+    Progress.advance()
 
     setTimeout(_ => {
       Progress.done()

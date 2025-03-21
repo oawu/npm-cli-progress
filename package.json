@@ -1,6 +1,6 @@
 {
   "name": "@oawu/cli-progress",
-  "version": "1.0.23",
+  "version": "2.0.0",
   "description": "🚀 轉轉轉，現在跑到哪裡惹？",
   "main": "index.js",
   "scripts": {
@@ -27,6 +27,6 @@
   },
   "homepage": "https://github.com/oawu/npm-cli-progress#readme",
   "dependencies": {
-    "@oawu/xterm": "^1.0.7"
+    "@oawu/xterm": "^1.0.9"
   }
 }
